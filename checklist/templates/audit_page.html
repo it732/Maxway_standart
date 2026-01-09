@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+{% block title %}Детали аудита{% endblock %}
+
+{% block content %}
+
+<h2>Детали аудита</h2>
+
+<form method="GET" class="filters">
+    <select name="filial">
+        <option value="all">Все филиалы</option>
+        {% for f in all_filials %}
+            <option value="{{ f }}" {% if request.GET.filial == f %}selected{% endif %}>{{ f }}</option>
+        {% endfor %}
+    </select>
+
+    <input type="date" name="from" value="{{ request.GET.from }}">
+    <input type="date" name="to" value="{{ request.GET.to }}">
+    <button type="submit">Фильтрация</button>
+    
+
+    <div class="export-buttons">
+        <!-- Excel Export -->
+        <a href="{% url 'audit_export_excel' %}?{% if request.GET.filial %}filial={{ request.GET.filial }}&{% endif %}{% if request.GET.from %}from={{ request.GET.from }}&{% endif %}{% if request.GET.to %}to={{ request.GET.to }}{% endif %}"
+           class="excel">Экспорт в Excel</a>
+
+        <!-- PDF Export -->
+        <a href="{% url 'audit_export_pdf' %}?{% if request.GET.filial %}filial={{ request.GET.filial }}&{% endif %}{% if request.GET.from %}from={{ request.GET.from }}&{% endif %}{% if request.GET.to %}to={{ request.GET.to }}{% endif %}"
+           class="pdf">Экспорт в PDFt</a>
+    </div>
+
+     
+</form>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Название филиала</th>
+                <th>Итоговый процент:</th>
+                <th>Дата</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for audit in audits %}
+            <tr>
+                <td>
+                    <a href="{% url 'audit_filial_detail' audit.filial_nomi %}">
+                        {{ audit.filial_nomi }}
+                    </a>
+                </td>
+                <td>{{ audit.percent }}%</td>
+                <td>{{ audit.created_at|date:"Y-m-d H:i" }}</td>
+                <td>
+                    <form method="POST" action="{% url 'audit_delete' audit.id %}"
+                        onsubmit="return confirm('Вы действительно хотите удалить?');">
+                        {% csrf_token %}
+                        <button type="submit" class="del-btn"
+                                style="background:#f44336;color:white;border:none;padding:6px 10px;border-radius:4px;cursor:pointer;">
+                            Удалить
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+
+{% block extra_head %}
+<style>
+  /* Umumiy dizayn */
+  body { font-family: Arial, sans-serif; background:#f4f6f7; padding:20px; margin: 0; }
+  h2 { text-align: center; color: #333; margin-bottom: 20px; }
+/* .action-bar {
+  display: none !important;
+} */
+  /* Card va Filial ma'lumotlari */
+  .card { 
+    background:#fff; 
+    padding:16px; 
+    border-radius:12px; 
+    margin-bottom:16px; 
+    box-shadow:0 4px 12px rgba(0,0,0,.08); 
+  }
+  .card-info {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 10px;
+    color: #555;
+  }
+
+  /* Filtrlar qismi */
+  .filters { 
+    display: flex; 
+    gap: 10px; 
+    flex-wrap: wrap; 
+    margin-bottom: 20px; 
+    background: #fff;
+    padding: 15px;
+    border-radius: 12px;
+  }
+  .filters select, .filters input[type="date"] { 
+    flex: 1 1 120px; /* Mobilda moslashuvchan kenglik */
+    padding: 10px; 
+    border-radius: 8px; 
+    border: 1px solid #ccc; 
+    font-size: 14px;
+  }
+  .btn { 
+    padding: 10px 20px; 
+    border: none; 
+    border-radius: 8px; 
+    background: #2f7df6; 
+    color: #fff; 
+    cursor: pointer; 
+    font-weight: bold;
+    flex: 1 1 100%; /* Mobilda tugma to'liq kenglikda */
+  }
+
+  /* Jadval sig'ishi uchun qat'iy qoidalar */
+  .table-wrap { 
+    width: 100%; 
+    overflow-x: auto; 
+    -webkit-overflow-scrolling: touch; 
+  }
+  table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    margin-top: 10px; 
+    min-width: 320px; /* Telefon kengligidan kichik bo'lmasligi uchun */
+  }
+  th, td { 
+    border: 1px solid #eee; 
+    padding: 8px; 
+    vertical-align: middle; 
+    font-size: 13px;
+    text-align: center;
+  }
+  th { background:#e9f2ff; color: #333; }
+  
+  /* Band nomi chapga tekislansin */
+  td:first-child, th:first-child { text-align: left; }
+
+  /* Ballar ranglari */
+  .s0 { background:#ffdddd; font-weight:700; color: #d9534f; }
+  .s1 { background:#fff3cd; font-weight:700; color: #8a6d3b; }
+  
+  /* Rasmlar */
+  .img { 
+    max-width: 70px; 
+    max-height: 90px; 
+    border: 1px solid #ddd; 
+    border-radius: 6px; 
+    object-fit: cover;
+  }
+
+  /* ✅ Mobile Tweaklar (Struktura o'zgarmaydi) */
+  @media (max-width: 600px) {
+    body { padding: 10px; }
+    h2 { font-size: 1.3rem; }
+    .card { padding: 12px; }
+    
+    /* Filial ma'lumotlarini ustma-ust qilish */
+    .card-info b { display: inline-block; margin-bottom: 2px; }
+    
+    th, td { padding: 6px 4px; font-size: 12px; }
+    
+    .img { max-width: 60px; max-height: 80px; }
+
+    /* Filtrlarni to'liq kenglikka yoyish */
+    .filters select, .filters input[type="date"] {
+      flex: 1 1 100%;
+    }
+  }
+  /* ... avvalgi barcha body, card, card-info kodlari o'zgarishsiz qoladi ... */
+
+  /* ✅ Eksport tugmalari uchun yangi dizayn */
+  .export-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    width: 100%;
+  }
+  .export-buttons a {
+    flex: 1;
+    text-align: center;
+    padding: 8px 5px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    transition: opacity 0.2s;
+  }
+  .export-buttons a.excel { background-color: #217346; } /* Excel yashil */
+  .export-buttons a.pdf { background-color: #d32f2f; }   /* PDF qizil */
+  .export-buttons a:active { opacity: 0.8; }
+
+  /* ✅ Jadval va Amallar ustunini qisqartirish */
+  table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    margin-top: 10px; 
+    table-layout: fixed; /* Ustunlar kengligini qat'iy nazorat qilish uchun */
+  }
+  
+  /* Ustun o'lchamlarini belgilash */
+  th:nth-child(1) { width: auto; }   /* Filial nomi */
+  th:nth-child(2) { width: 55px; }   /* Foiz ustuni */
+  th:nth-child(3) { width: 85px; }   /* Sana ustuni */
+  th:nth-child(4) { width: 75px; }   /* Amallar (O'chirish) ustuni */
+
+  th, td { 
+    border: 1px solid #eee; 
+    padding: 6px 2px; 
+    vertical-align: middle; 
+    font-size: 12px;
+    text-align: center;
+    word-wrap: break-word; /* Matn sig'masa pastga tushadi */
+  }
+
+  /* ✅ O'chirish tugmasini juda ixcham qilish */
+  .del-btn {
+    background: #f44336;
+    color: white;
+    border: none;
+    padding: 4px 6px;
+    border-radius: 4px;
+    font-size: 10px; /* Matnni kichiklatdik */
+    cursor: pointer;
+    width: 100%;
+    text-transform: uppercase;
+  }
+
+  /* Mobilda yanada ixchamroq qilish */
+  @media (max-width: 600px) {
+    th, td { font-size: 11px; padding: 4px 2px; }
+    .del-btn { font-size: 9px; padding: 3px; }
+    .export-buttons a { font-size: 11px; }
+  }
+.container {
+    padding-bottom: 24% !important;
+  }
+</style>
+{% endblock %}
