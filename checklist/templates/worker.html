@@ -234,7 +234,7 @@ input[type="file"]::-webkit-file-upload-button {
     table {
         min-width: 100% !important; 
     }
- 
+}
 
 
 </style>
@@ -316,83 +316,167 @@ input[type="file"]::-webkit-file-upload-button {
 <script>
 const successUrl = "{% url 'audit_success' %}";
 
-const AUDIT_DATA = [
-  { bandId: "oshxona_subheader", text: "Hodimlar, kiyinish xonasi va staff zonasi:", subheader: true },
-  { bandId: "hujjatlar", text: "Kiyinish xonasi tozalik holati" },
-  { bandId: "oxknv", text: "Hodimlar uchun ajratilgan shkaflarda ish kiyimlari qoldirilmaganmi" },
-  { bandId: "xodimlar_chek_listi", text: "Staff zona toza holatda, foydalanilgan idishlar qarovsiz va qoldiqlar qolmagan" },
-  { bandId: "dezinfeksiya_jurnali", text: "Ishchi hodimlar, restoran direktori va menedjeri tashqi ko'rinishi standartlarda ko'rsatilgan talabga javob beradi" },
-  { bandId: "bakteritsid_lampa", text: "Filial chek listlari to'liq yuritiladi va o'z vaqtida nazorat qilinmoqda" },
-  { bandId: "tibbiy_koriklar", text: "Yog' jurnallari to'liq yuritilmoqda" },
-  { bandId: "sanminimum", text: "Birinchi yordam to'plami mavjud va ro'yhatdagi dorilar to'liq ta'minlangan" },
-  { bandId: "dezinfeksiya_shartnomasi", text: "Restoran yong'inga qarshi jihozlar (o't o'chirgichlar) mavjud va ishlatishga yaroqli holatda" },
+// const AUDIT_DATA = [
+//   { bandId: "oshxona_subheader", text: "Hodimlar, kiyinish xonasi va staff zonasi:", subheader: true },
+//   { bandId: "hujjatlar", text: "Kiyinish xonasi tozalik holati" },
+//   { bandId: "oxknv", text: "Hodimlar uchun ajratilgan shkaflarda ish kiyimlari qoldirilmaganmi" },
+//   { bandId: "xodimlar_chek_listi", text: "Staff zona toza holatda, foydalanilgan idishlar qarovsiz va qoldiqlar qolmagan" },
+//   { bandId: "dezinfeksiya_jurnali", text: "Ishchi hodimlar, restoran direktori va menedjeri tashqi ko'rinishi standartlarda ko'rsatilgan talabga javob beradi" },
+//   { bandId: "bakteritsid_lampa", text: "Filial chek listlari to'liq yuritiladi va o'z vaqtida nazorat qilinmoqda" },
+//   { bandId: "tibbiy_koriklar", text: "Yog' jurnallari to'liq yuritilmoqda" },
+//   { bandId: "sanminimum", text: "Birinchi yordam to'plami mavjud va ro'yhatdagi dorilar to'liq ta'minlangan" },
+//   { bandId: "dezinfeksiya_shartnomasi", text: "Restoran yong'inga qarshi jihozlar (o't o'chirgichlar) mavjud va ishlatishga yaroqli holatda" },
    
-  { bandId: "oshxona_subheader", text: "Omborxona", subheader: true },
-  { bandId: "oshxona_qol_yuvish", text: "Omborxona tozalik holati. Saqlash javonlari, idishlar muntazam tozalanadimi" },
-  { bandId: "oshxona_tozalik_sifati", text: "Mahsulotlar saqlanadigan yashik va polkalar to'liq markerovkalangan. Mahsulotlar belgilangan polkalarda to'g'ri joylashtirilgan." },
-  { bandId: "oshxona_anjom_tamgasi", text: "Mahsulotlar ochiq qadoqda emas va polda saqlanmagan" },
-  { bandId: "oshxona_xom_pishgan", text: "Mahsulot birlamchi va ikkilamchi saqlash muddatlari aniq ko'ringan. Muddati o'tgan mahsulotlar yo'q" },
-  { bandId: "oshxona_saqlash_muddatlari", text: "Tovar qo'shnichiligiga rioya qilingan va FIFO qoidasiga amal qilingan." },
-  { bandId: "oshxona_joylashtirish", text: "Turli xil zararkunandalar va hashoratlarga qulay zona yaratilmaganmi" },
+//   { bandId: "oshxona_subheader", text: "Omborxona", subheader: true },
+//   { bandId: "oshxona_qol_yuvish", text: "Omborxona tozalik holati. Saqlash javonlari, idishlar muntazam tozalanadimi" },
+//   { bandId: "oshxona_tozalik_sifati", text: "Mahsulotlar saqlanadigan yashik va polkalar to'liq markerovkalangan. Mahsulotlar belgilangan polkalarda to'g'ri joylashtirilgan." },
+//   { bandId: "oshxona_anjom_tamgasi", text: "Mahsulotlar ochiq qadoqda emas va polda saqlanmagan" },
+//   { bandId: "oshxona_xom_pishgan", text: "Mahsulot birlamchi va ikkilamchi saqlash muddatlari aniq ko'ringan. Muddati o'tgan mahsulotlar yo'q" },
+//   { bandId: "oshxona_saqlash_muddatlari", text: "Tovar qo'shnichiligiga rioya qilingan va FIFO qoidasiga amal qilingan." },
+//   { bandId: "oshxona_joylashtirish", text: "Turli xil zararkunandalar va hashoratlarga qulay zona yaratilmaganmi" },
   
 
-  { bandId: "salatxona_subheaderi", text: "Muzlatgich", subheader: true },
-  { bandId: "salatxona_tozalik", text: "Muzlatgichning dachchikdagi harorati va ichki harorati talabga javob beradimi" },
-  { bandId: "salatxona_anjom_yuvish_suv", text: "Muzlatgich muntazam tozalangan va stellajlar tagi va har bir polkalari tozaligi yaxshi" },
-  { bandId: "salatxona_harorat", text: "Mahsulotlar saqlanadigan yashik va polkalar to'liq markerovkalangan. Mahsulotlar belgilangan polkalarda to'g'ri joylashtirilgan." },
-  { bandId: "salatxona_sovutgich_rioya", text: "Mahsulotlar ochiq qadoqda emas va polda saqlanmagan" },
-  { bandId: "salatxona_mahsulot_qoshniligi", text: "Mahsulot birlamchi va ikkilamchi saqlash muddatlari aniq ko'ringan. Muddati o'tgan mahsulotlar yo'q" },
-  { bandId: "salatxona_maxsus_qoidalar", text: "Tovar qo'shnichiligiga rioya qilingan va FIFO qoidasiga amal qilingan." },
-  { bandId: "salatxona_anjomlar_maqsad", text: "Hom va pishgan mahsulotlar bir qatorga joylashtirilmagan" },
-  { bandId: "salatxona_anjom_toza", text: "Muzlatgichda maxsulot zahirasi hisobi to'g'ri olingan va begona buyumlar yo'q" },
+//   { bandId: "salatxona_subheaderi", text: "Muzlatgich", subheader: true },
+//   { bandId: "salatxona_tozalik", text: "Muzlatgichning dachchikdagi harorati va ichki harorati talabga javob beradimi" },
+//   { bandId: "salatxona_anjom_yuvish_suv", text: "Muzlatgich muntazam tozalangan va stellajlar tagi va har bir polkalari tozaligi yaxshi" },
+//   { bandId: "salatxona_harorat", text: "Mahsulotlar saqlanadigan yashik va polkalar to'liq markerovkalangan. Mahsulotlar belgilangan polkalarda to'g'ri joylashtirilgan." },
+//   { bandId: "salatxona_sovutgich_rioya", text: "Mahsulotlar ochiq qadoqda emas va polda saqlanmagan" },
+//   { bandId: "salatxona_mahsulot_qoshniligi", text: "Mahsulot birlamchi va ikkilamchi saqlash muddatlari aniq ko'ringan. Muddati o'tgan mahsulotlar yo'q" },
+//   { bandId: "salatxona_maxsus_qoidalar", text: "Tovar qo'shnichiligiga rioya qilingan va FIFO qoidasiga amal qilingan." },
+//   { bandId: "salatxona_anjomlar_maqsad", text: "Hom va pishgan mahsulotlar bir qatorga joylashtirilmagan" },
+//   { bandId: "salatxona_anjom_toza", text: "Muzlatgichda maxsulot zahirasi hisobi to'g'ri olingan va begona buyumlar yo'q" },
   
-  { bandId: "moykova_subheader", text: "Sovutgich", subheader: true },
-  { bandId: "moykova_tozalik", text: "Sovutgichning dachchikdagi harorati va ichki harorati talabga javob beradimi" },
-  { bandId: "moykova_qoplamalar", text: "Sovutgich muntazam tozalangan va stellajlar tagi va har bir polkalari tozaligi yaxshi" },
-  { bandId: "moykova_yuvish_vositalari", text: "Mahsulotlar saqlanadigan yashik va polkalar to'liq markerovkalangan. Mahsulotlar belgilangan polkalarda to'g'ri joylashtirilgan." },
-  { bandId: "moykova_chotka", text: "Mahsulotlar ochiq qadoqda emas va polda saqlanmagan" },
-  { bandId: "moykova_yuvish_jarayoni", text: "Mahsulot birlamchi va ikkilamchi saqlash muddatlari aniq ko'ringan. Muddati o'tgan mahsulotlar yo'q" },
-  { bandId: "moykova_toza_anjom", text: "Tovar qo'shnichiligiga rioya qilingan va FIFO qoidasiga amal qilingan." },
-  { bandId: "moykova_kir_anjom", text: "Zararlangan ko'kat va sabzavotlar mavjud emas" },
-  { bandId: "moykova_jiroluvittel_tozaligi", text: "Sovutgichda maxsulot zahirasi hisobi to'g'ri olingan va begona buyumlar yo'q" },
+//   { bandId: "moykova_subheader", text: "Sovutgich", subheader: true },
+//   { bandId: "moykova_tozalik", text: "Sovutgichning dachchikdagi harorati va ichki harorati talabga javob beradimi" },
+//   { bandId: "moykova_qoplamalar", text: "Sovutgich muntazam tozalangan va stellajlar tagi va har bir polkalari tozaligi yaxshi" },
+//   { bandId: "moykova_yuvish_vositalari", text: "Mahsulotlar saqlanadigan yashik va polkalar to'liq markerovkalangan. Mahsulotlar belgilangan polkalarda to'g'ri joylashtirilgan." },
+//   { bandId: "moykova_chotka", text: "Mahsulotlar ochiq qadoqda emas va polda saqlanmagan" },
+//   { bandId: "moykova_yuvish_jarayoni", text: "Mahsulot birlamchi va ikkilamchi saqlash muddatlari aniq ko'ringan. Muddati o'tgan mahsulotlar yo'q" },
+//   { bandId: "moykova_toza_anjom", text: "Tovar qo'shnichiligiga rioya qilingan va FIFO qoidasiga amal qilingan." },
+//   { bandId: "moykova_kir_anjom", text: "Zararlangan ko'kat va sabzavotlar mavjud emas" },
+//   { bandId: "moykova_jiroluvittel_tozaligi", text: "Sovutgichda maxsulot zahirasi hisobi to'g'ri olingan va begona buyumlar yo'q" },
    
-  { bandId: "ombor_subheader", text: "Oshxona jihozlari", subheader: true },
-  { bandId: "ombor_harorat", text: "Har bir stansiya to'liq markerovkalangan" },
-  { bandId: "ombor_saqlash_muddat", text: "Elektr va gaz jihozlarida nosozliklar yo'q va soz holatda" },
-  { bandId: "ombor_stellajlar", text: "Frityurlar, grill pechlar va boshqalar har smena ohirida tozalanadi. Yog' va oziq-ovqat qoldiqlari doimiy tozalanadi." },
-  { bandId: "ombor_joylashuv", text: "Mikroto'lqinli pech va risovarkani holati yaxshi" },
-  { bandId: "ombor_yaroqlilik_sanasi", text: "Ventilyatsa tizimi soz holatda va muntazam tozalanib kelinadi" },
-  { bandId: "ombor_tozalash_vositalari", text: "Robotoster va Garland lentalari yaxshi yaroqli holatda" },
-  { bandId: "ombor_quruq_hol", text: "Toster toshlari, tozaligi va haroratlari yaxshi" },
-  { bandId: "ombor_muzlatgich_termometr", text: "Fri marmit va burgershutlar belgilangan haroratda" },
-  { bandId: "ombor_mahsulot_qoshniligi", text: "Coffee apparati soz holatda" },
-  { bandId: "ombor_harorat_qoshniligi", text: "Har bir stansiya taroz bilan ta'minlangan va ishlaydi" },
-  { bandId: "ombor_tartib", text: "Go'sht apparat kamforka setkalari yaroqli" },
-  { bandId: "ombor_qadoqlangan", text: "Har bir multixolder taymerlaridan foydalaniladi va harorati normal" },
-  { bandId: "ombor_begona_buyumlar", text: "Ahlat chelaklari bo'shatilgan yoki 3dan 2qismi to'lganida bo'shatiladi." },
-  { bandId: "ombor_Begonabuyumlar_mavjudmi", text: "Frityurlar bir kunda kamida 2marta filtrlanadi va fri yog'lari yaroqli " },
-  { bandId: "ombor_Begonabuyumlar_mavjudmi", text: "Pichoqlar charxlangan, tandir pichoq charxlangan, har bir pichoqlar belgilangan stansiyasida ishlatilinadi" },
-  { bandId: "ombor_Begonabuyumlar_mavjudmi", text: "Rakvinalarda qarovsiz qoldirilgan idishlar yo'q " },
+//   { bandId: "ombor_subheader", text: "Oshxona jihozlari", subheader: true },
+//   { bandId: "ombor_harorat", text: "Har bir stansiya to'liq markerovkalangan" },
+//   { bandId: "ombor_saqlash_muddat", text: "Elektr va gaz jihozlarida nosozliklar yo'q va soz holatda" },
+//   { bandId: "ombor_stellajlar", text: "Frityurlar, grill pechlar va boshqalar har smena ohirida tozalanadi. Yog' va oziq-ovqat qoldiqlari doimiy tozalanadi." },
+//   { bandId: "ombor_joylashuv", text: "Mikroto'lqinli pech va risovarkani holati yaxshi" },
+//   { bandId: "ombor_yaroqlilik_sanasi", text: "Ventilyatsa tizimi soz holatda va muntazam tozalanib kelinadi" },
+//   { bandId: "ombor_tozalash_vositalari", text: "Robotoster va Garland lentalari yaxshi yaroqli holatda" },
+//   { bandId: "ombor_quruq_hol", text: "Toster toshlari, tozaligi va haroratlari yaxshi" },
+//   { bandId: "ombor_muzlatgich_termometr", text: "Fri marmit va burgershutlar belgilangan haroratda" },
+//   { bandId: "ombor_mahsulot_qoshniligi", text: "Coffee apparati soz holatda" },
+//   { bandId: "ombor_harorat_qoshniligi", text: "Har bir stansiya taroz bilan ta'minlangan va ishlaydi" },
+//   { bandId: "ombor_tartib", text: "Go'sht apparat kamforka setkalari yaroqli" },
+//   { bandId: "ombor_qadoqlangan", text: "Har bir multixolder taymerlaridan foydalaniladi va harorati normal" },
+//   { bandId: "ombor_begona_buyumlar", text: "Ahlat chelaklari bo'shatilgan yoki 3dan 2qismi to'lganida bo'shatiladi." },
+//   { bandId: "ombor_Begonabuyumlar_mavjudmi", text: "Frityurlar bir kunda kamida 2marta filtrlanadi va fri yog'lari yaroqli " },
+//   { bandId: "ombor_Begonabuyumlar_mavjudmi", text: "Pichoqlar charxlangan, tandir pichoq charxlangan, har bir pichoqlar belgilangan stansiyasida ishlatilinadi" },
+//   { bandId: "ombor_Begonabuyumlar_mavjudmi", text: "Rakvinalarda qarovsiz qoldirilgan idishlar yo'q " },
 
-  { bandId: "koridor_subheader", text: "Oziq-ovqat mahsulotlari", subheader: true },
-  { bandId: "koridor_tozalik", text: "Oziq-ovqat bilan ishlaydigan hodimlarda zargarlik buyumlari yo'q, qo'llari toza va qolqop kiyilgan" },
-  { bandId: "koridor_tosiq", text: "Ish stollari usti va tagi, pichoqlar, foydalanilgan idishlar doimiy nazoratda tozalangan." },
-  { bandId: "koridor_qoplama", text: "Mahsulotlar defrostatsasi xona haroratida emas" },
-  { bandId: "koridor_begona_narsalar", text: "Shirinliklar va desertlar to'g'ri saqlanadi va yaroqlik muddatlari doimiy nazoratda" },
-  { bandId: "koridor_dezbarer", text: "Oshxona hududida qog'oz qutili mahsulotlar yo'q. Begona buyumlar yo'q" },
-  { bandId: "koridor_bezaklar", text: "Tayyor mahsulotlar uchun pergamentlar, stakanlar va boshqa qadoqlash mahsulotlari yetarliy va uzilshlar yo'q" },
-  { bandId: "koridor_mop_yuvish", text: "Siroplar va sutlar yaroqlik muddati yaxshi va to'g'ri saqlanadi" },
-  { bandId: "koridor_mop_sarasizlantirish", text: "Hodimlar uchun tex kartalar qulay joyga joylashtirilga va tanishtirilgan" },
-  { bandId: "koridor_mop_saqlash", text: "Mahsulotlar standartlar asosida tayyorlanadi" },
-  { bandId: "koridor_mop_saqlash", text: "Oshxonada zararlangan, mog'orlagan va saqlash muddati o'tgan mahsulotlar yo'q" },
-  { bandId: "koridor_mop_saqlash", text: "Maxsulotlarga ikkilamchi saqlash muddatlari qo'yigan" },
-  { bandId: "koridor_mop_saqlash", text: "Maxsulotlar ikkilamchi saqlash muddatlari o'zgartiriladi" },
-  { bandId: "koridor_mop_saqlash", text: "Mahsulotlar grammlari tex kartalarga mos keladi" },
-  { bandId: "koridor_mop_saqlash", text: "Mahsulotlar grammlari tex kartalarga mos keladi" },
-  { bandId: "koridor_mop_saqlash", text: "Mahsulotlar grammlari tex kartalarga mos keladi" },
+//   { bandId: "koridor_subheader", text: "Oziq-ovqat mahsulotlari", subheader: true },
+//   { bandId: "koridor_tozalik", text: "Oziq-ovqat bilan ishlaydigan hodimlarda zargarlik buyumlari yo'q, qo'llari toza va qolqop kiyilgan" },
+//   { bandId: "koridor_tosiq", text: "Ish stollari usti va tagi, pichoqlar, foydalanilgan idishlar doimiy nazoratda tozalangan." },
+//   { bandId: "koridor_qoplama", text: "Mahsulotlar defrostatsasi xona haroratida emas" },
+//   { bandId: "koridor_begona_narsalar", text: "Shirinliklar va desertlar to'g'ri saqlanadi va yaroqlik muddatlari doimiy nazoratda" },
+//   { bandId: "koridor_dezbarer", text: "Oshxona hududida qog'oz qutili mahsulotlar yo'q. Begona buyumlar yo'q" },
+//   { bandId: "koridor_bezaklar", text: "Tayyor mahsulotlar uchun pergamentlar, stakanlar va boshqa qadoqlash mahsulotlari yetarliy va uzilshlar yo'q" },
+//   { bandId: "koridor_mop_yuvish", text: "Siroplar va sutlar yaroqlik muddati yaxshi va to'g'ri saqlanadi" },
+//   { bandId: "koridor_mop_sarasizlantirish", text: "Hodimlar uchun tex kartalar qulay joyga joylashtirilga va tanishtirilgan" },
+//   { bandId: "koridor_mop_saqlash", text: "Mahsulotlar standartlar asosida tayyorlanadi" },
+//   { bandId: "koridor_mop_saqlash", text: "Oshxonada zararlangan, mog'orlagan va saqlash muddati o'tgan mahsulotlar yo'q" },
+//   { bandId: "koridor_mop_saqlash", text: "Maxsulotlarga ikkilamchi saqlash muddatlari qo'yigan" },
+//   { bandId: "koridor_mop_saqlash", text: "Maxsulotlar ikkilamchi saqlash muddatlari o'zgartiriladi" },
+//   { bandId: "koridor_mop_saqlash", text: "Mahsulotlar grammlari tex kartalarga mos keladi" },
+//   { bandId: "koridor_mop_saqlash", text: "Mahsulotlar grammlari tex kartalarga mos keladi" },
+//   { bandId: "koridor_mop_saqlash", text: "Mahsulotlar grammlari tex kartalarga mos keladi" },
    
   
-];
+// ];
+
+
+const AUDIT_DATA = {
+    // --- HODIMLAR, KIYINISH XONASI VA STAFF ZONASI ---
+    "staff_zona_header": { text: "Hodimlar, kiyinish xonasi va staff zonasi:", subheader: true },
+    "kiyinish_xonasi_tozalik": { text: "Kiyinish xonasi tozalik holati" },
+    "shkaflar_ish_kiyimi": { text: "Hodimlar uchun ajratilgan shkaflarda ish kiyimlari qoldirilmaganmi" },
+    "staff_zona_toza": { text: "Staff zona toza holatda, foydalanilgan idishlar qarovsiz va qoldiqlar qolmagan" },
+    "xodimlar_tashqi_korinish": { text: "Ishchi hodimlar, restoran direktori va menedjeri tashqi ko'rinishi standartlarda ko'rsatilgan talabga javob beradi" },
+    "filial_chek_listlari": { text: "Filial chek listlari to'liq yuritiladi va o'z vaqtida nazorat qilinmoqda" },
+    "yog_jurnallari": { text: "Yog' jurnallari to'liq yuritilmoqda" },
+    "birinchi_yordam_toplami": { text: "Birinchi yordam to'plami mavjud va ro'yhatdagi dorilar to'liq ta'minlangan" },
+    "yonginga_qarshi_jihozlar": { text: "Restoran yong'inga qarshi jihozlar (o't o'chirgichlar) mavjud va ishlatishga yaroqli holatda" },
+
+    // --- OMBORXONA ---
+    "omborxona_header": { text: "Omborxona", subheader: true },
+    "omborxona_tozalik_holati": { text: "Omborxona tozalik holati. Saqlash javonlari, idishlar muntazam tozalanadimi" },
+    "mahsulotlar_markirovka": { text: "Mahsulotlar saqlanadigan yashik va polkalar to'liq markerovkalangan. Mahsulotlar belgilangan polkalarda to'g'ri joylashtirilgan." },
+    "mahsulot_ochiq_qadoq": { text: "Mahsulotlar ochiq qadoqda emas va polda saqlanmagan" },
+    "saqlash_muddatlari_aniq": { text: "Mahsulot birlamchi va ikkilamchi saqlash muddatlari aniq ko'ringan. Muddati o'tgan mahsulotlar yo'q" },
+    "tovar_qoshnichiligi_fifo": { text: "Tovar qo'shnichiligiga rioya qilingan va FIFO qoidasiga amal qilingan." },
+    "zararkunandalar_zonasi": { text: "Turli xil zararkunandalar va hashoratlarga qulay zona yaratilmaganmi" },
+
+    // --- MUZLATGICH ---
+    "muzlatgich_header": { text: "Muzlatgich", subheader: true },
+    "muzlatgich_harorat_javob": { text: "Muzlatgichning dachchikdagi harorati va ichki harorati talabga javob beradimi" },
+    "muzlatgich_muntazam_tozalik": { text: "Muzlatgich muntazam tozalangan va stellajlar tagi va har bir polkalari tozaligi yaxshi" },
+    "muzlatgich_markirovka_polka": { text: "Mahsulotlar saqlanadigan yashik va polkalar to'liq markerovkalangan. Mahsulotlar belgilangan polkalarda to'g'ri joylashtirilgan." },
+    "muzlatgich_ochiq_qadoq": { text: "Mahsulotlar ochiq qadoqda emas va polda saqlanmagan" },
+    "muzlatgich_muddatlar_yoq": { text: "Mahsulot birlamchi va ikkilamchi saqlash muddatlari aniq ko'ringan. Muddati o'tgan mahsulotlar yo'q" },
+    "muzlatgich_fifo_rioya": { text: "Tovar qo'shnichiligiga rioya qilingan va FIFO qoidasiga amal qilingan." },
+    "muzlatgich_hom_pishgan": { text: "Hom va pishgan mahsulotlar bir qatorga joylashtirilmagan" },
+    "muzlatgich_zaxira_hisobi": { text: "Muzlatgichda maxsulot zahirasi hisobi to'g'ri olingan va begona buyumlar yo'q" },
+
+    // --- SOVUTGICH ---
+    "sovutgich_header": { text: "Sovutgich", subheader: true },
+    "sovutgich_harorat_javob": { text: "Sovutgichning dachchikdagi harorati va ichki harorati talabga javob beradimi" },
+    "sovutgich_muntazam_tozalik": { text: "Sovutgich muntazam tozalangan va stellajlar tagi va har bir polkalari tozaligi yaxshi" },
+    "sovutgich_markirovka_polka": { text: "Mahsulotlar saqlanadigan yashik va polkalar to'liq markerovkalangan. Mahsulotlar belgilangan polkalarda to'g'ri joylashtirilgan." },
+    "sovutgich_ochiq_qadoq": { text: "Mahsulotlar ochiq qadoqda emas va polda saqlanmagan" },
+    "sovutgich_muddatlar_yoq": { text: "Mahsulot birlamchi va ikkilamchi saqlash muddatlari aniq ko'ringan. Muddati o'tgan mahsulotlar yo'q" },
+    "sovutgich_fifo_rioya": { text: "Tovar qo'shnichiligiga rioya qilingan va FIFO qoidasiga amal qilingan." },
+    "sovutgich_zararlangan_kokat": { text: "Zararlangan ko'kat va sabzavotlar mavjud emas" },
+    "sovutgich_zaxira_hisobi": { text: "Sovutgichda maxsulot zahirasi hisobi to'g'ri olingan va begona buyumlar yo'q" },
+
+    // --- OSHXONA JIHOZLARI ---
+    "oshxona_jihoz_header": { text: "Oshxona jihozlari", subheader: true },
+    "stansiya_markirovka": { text: "Har bir stansiya to'liq markerovkalangan" },
+    "jihozlar_nosozlik_yoq": { text: "Elektr va gaz jihozlarida nosozliklar yo'q va soz holatda" },
+    "jihozlar_smena_tozalik": { text: "Frityurlar, grill pechlar va boshqalar har smena ohirida tozalanadi. Yog' va oziq-ovqat qoldiqlari doimiy tozalanadi." },
+    "pech_risovarka_holati": { text: "Mikroto'lqinli pech va risovarkani holati yaxshi" },
+    "ventilyatsiya_tizimi": { text: "Ventilyatsa tizimi soz holatda va muntazam tozalanib kelinadi" },
+    "robotoster_garland_holati": { text: "Robotoster va Garland lentalari yaxshi yaroqli holatda" },
+    "toster_toshlari_tozaligi": { text: "Toster toshlari, tozaligi va haroratlari yaxshi" },
+    "fri_marmit_harorat": { text: "Fri marmit va burgershutlar belgilangan haroratda" },
+    "coffee_apparati_soz": { text: "Coffee apparati soz holatda" },
+    "stansiya_tarozi_mavjud": { text: "Har bir stansiya taroz bilan ta'minlangan va ishlaydi" },
+    "gosht_apparat_setka": { text: "Go'sht apparat kamforka setkalari yaroqli" },
+    "multixolder_taymer_harorat": { text: "Har bir multixolder taymerlaridan foydalaniladi va harorati normal" },
+    "ahlat_chelaklari_tolishi": { text: "Ahlat chelaklari bo'shatilgan yoki 3dan 2qismi to'lganida bo'shatiladi." },
+    "frityur_filtr_yog": { text: "Frityurlar bir kunda kamida 2marta filtrlanadi va fri yog'lari yaroqli " },
+    "pichoqlar_charxlangan_stansiya": { text: "Pichoqlar charxlangan, tandir pichoq charxlangan, har bir pichoqlar belgilangan stansiyasida ishlatilinadi" },
+    "rakvinalar_idish_yoq": { text: "Rakvinalarda qarovsiz qoldirilgan idishlar yo'q " },
+
+    // --- OZIQ-OVQAT MAHSULOTLARI ---
+    "oziq_ovqat_header": { text: "Oziq-ovqat mahsulotlari", subheader: true },
+    "xodimlar_zargarlik_qolqop": { text: "Oziq-ovqat bilan ishlaydigan hodimlarda zargarlik buyumlari yo'q, qo'llari toza va qolqop kiyilgan" },
+    "ish_stollari_tozalik": { text: "Ish stollari usti va tagi, pichoqlar, foydalanilgan idishlar doimiy nazoratda tozalangan." },
+    "mahsulot_defrostatsiya": { text: "Mahsulotlar defrostatsasi xona haroratida emas" },
+    "shirinliklar_desert_muddat": { text: "Shirinliklar va desertlar to'g'ri saqlanadi va yaroqlik muddatlari doimiy nazoratda" },
+    "oshxona_qogoz_quti_yoq": { text: "Oshxona hududida qog'oz qutili mahsulotlar yo'q. Begona buyumlar yo'q" },
+    "tayyor_mahsulot_qadoqlash": { text: "Tayyor mahsulotlar uchun pergamentlar, stakanlar va boshqa qadoqlash mahsulotlari yetarliy va uzilshlar yo'q" },
+    "siroplar_sutlar_muddat": { text: "Siroplar va sutlar yaroqlik muddati yaxshi va to'g'ri saqlanadi" },
+    "tex_kartalar_joylashuvi": { text: "Hodimlar uchun tex kartalar qulay joyga joylashtirilga va tanishtirilgan" },
+    "mahsulot_standart_tayyorlash": { text: "Mahsulotlar standartlar asosida tayyorlanadi" },
+    "mogorlagan_muddat_otgan": { text: "Oshxonada zararlangan, mog'orlagan va saqlash muddati o'tgan mahsulotlar yo'q" },
+    "ikkilamchi_muddat_qoyilgan": { text: "Maxsulotlarga ikkilamchi saqlash muddatlari qo'yigan" },
+    "ikkilamchi_muddat_ozgartirish": { text: "Maxsulotlar ikkilamchi saqlash muddatlari o'zgartiriladi" },
+    "grammlar_tex_karta_1": { text: "Mahsulotlar grammlari tex kartalarga mos keladi" },
+    "grammlar_tex_karta_2": { text: "Mahsulotlar grammlari tex kartalarga mos keladi" },
+    "grammlar_tex_karta_3": { text: "Mahsulotlar grammlari tex kartalarga mos keladi" }
+};
+
+
 
 // --- Global ---
 let currentFilialName = '';
@@ -402,7 +486,7 @@ function getColorClass(score) {
   score = parseInt(score);
   if (score === 2) return 'green';
   if (score === 1) return 'yellow';
-  if (score === 0) return 'red';
+  if (score === 0) return 'red';  
   return 'default';
 }
 
@@ -423,37 +507,70 @@ function updatePercentage() {
   document.getElementById('hiddenTotalPercentage').value = finalPercentage.toFixed(2);
 }
 
-function createScoreInput(bandId, tdElement) {
+// function createScoreInput(bandId, tdElement) {
+//   const input = document.createElement('input');
+//   input.type = 'number';
+//   input.className = 'score-input';
+//   input.min = '0';
+//   input.max = '2';
+//   input.placeholder = '0-2';
+//   input.name = `score_${bandId}`;
+//   input.id = `score_${bandId}`;
+
+//   input.addEventListener('input', function() {
+//     let score = this.value.trim();
+//     if (score !== '' && (parseInt(score) < 0 || parseInt(score) > 2 || score.length > 1)) {
+//       this.value = '';
+//       score = '';
+//     }
+
+//     tdElement.classList.remove('green', 'yellow', 'red', 'default');
+//     tdElement.classList.add(getColorClass(score));
+
+//     if (!allScores[bandId]) allScores[bandId] = { score: '', images: [] };
+//     allScores[bandId].score = score;
+//     setInvalidState(this, this.value.trim() === '');
+
+//     updatePercentage();
+//   });
+
+//   tdElement.appendChild(input);
+//   tdElement.classList.add('default');
+
+//   if (!allScores[bandId]) allScores[bandId] = { score: '', images: [] };
+// }
+
+
+function createScoreInput(bandId, tdElement, bandText) {
   const input = document.createElement('input');
   input.type = 'number';
   input.className = 'score-input';
   input.min = '0';
-  input.max = '2';
+  input.max = '3';
   input.placeholder = '0-2';
   input.name = `score_${bandId}`;
   input.id = `score_${bandId}`;
 
+  // YASHIRIN INPUT: Savol matnini yuborish uchun
+  const textInput = document.createElement('input');
+  textInput.type = 'hidden';
+  textInput.name = `text_${bandId}`;
+  textInput.value = bandText;
+
   input.addEventListener('input', function() {
     let score = this.value.trim();
-    if (score !== '' && (parseInt(score) < 0 || parseInt(score) > 2 || score.length > 1)) {
+    if (score !== '' && (parseInt(score) < 0 || parseInt(score) > 3)) {
       this.value = '';
       score = '';
     }
-
     tdElement.classList.remove('green', 'yellow', 'red', 'default');
     tdElement.classList.add(getColorClass(score));
-
-    if (!allScores[bandId]) allScores[bandId] = { score: '', images: [] };
-    allScores[bandId].score = score;
-    setInvalidState(this, this.value.trim() === '');
-
     updatePercentage();
   });
 
   tdElement.appendChild(input);
+  tdElement.appendChild(textInput); // Yashirin inputni qo'shish
   tdElement.classList.add('default');
-
-  if (!allScores[bandId]) allScores[bandId] = { score: '', images: [] };
 }
 
 function createImageUploaders(bandId, tdElement) {
@@ -492,62 +609,7 @@ function createImageUploaders(bandId, tdElement) {
   tdElement.appendChild(previewContainer);
 }
 
-// function handleImageUpload(e, bandId, index, previewContainer, inputContainer, fileInput) {
-//   const file = e.target.files[0];
-//   const maxFileSize = 5 * 1024 * 1024;
-
-//   previewContainer.innerHTML = '';
-
-//   if (file) {
-//     if (!file.type.startsWith('image/')) {
-//       alert('Faqat rasm fayllarini yuklang!');
-//       e.target.value = '';
-//       return;
-//     }
-//     if (file.size > maxFileSize) {
-//       alert('Rasm hajmi 5MB dan oshmasligi kerak!');
-//       e.target.value = '';
-//       return;
-//     }
-
-//     // inputContainer.style.display = 'none';
-    
-//     inputContainer.style.opacity = '0';
-//     inputContainer.style.position = 'absolute';
-//     inputContainer.style.pointerEvents = 'none';
-
-
-//     const reader = new FileReader();
-//     reader.onload = function(event) {
-//       const wrapper = document.createElement('div');
-//       wrapper.classList.add('image-preview-wrapper');
-//       wrapper.id = `wrapper_${bandId}_${index}`;
-
-//       const img = document.createElement('img');
-//       img.src = event.target.result;
-//       img.classList.add('image-preview');
-
-//       const deleteBtn = document.createElement('div');
-//       deleteBtn.classList.add('delete-btn');
-//       deleteBtn.textContent = 'X';
-
-//       deleteBtn.addEventListener('click', () => {
-//         fileInput.value = '';
-//         previewContainer.innerHTML = '';
-//         inputContainer.style.display = 'block';
-//       });
-
-//       wrapper.appendChild(img);
-//       wrapper.appendChild(deleteBtn);
-//       previewContainer.appendChild(wrapper);
-//     };
-//     reader.readAsDataURL(file);
-
-//   } else {
-//     inputContainer.style.display = 'block';
-//   }
-// }
-
+ 
 async function handleImageUpload(e, bandId, index, previewContainer, inputContainer, fileInput) {
   const file = e.target.files[0];
   const maxFileSize = 5 * 1024 * 1024;
@@ -641,18 +703,54 @@ async function handleImageUpload(e, bandId, index, previewContainer, inputContai
 }
 
 
+// function populateTable() {
+//   const tbody = document.getElementById('audit-body');
+//   tbody.innerHTML = '';
+
+//   AUDIT_DATA.forEach(data => {
+//     const row = document.createElement('tr');
+
+//     if (data.subheader) {
+//       row.classList.add('subheader-row');
+//       row.innerHTML = `<th colspan="3">${data.text}</th>`;
+//     } else {
+//       row.setAttribute('data-band-id', data.bandId);
+
+//       const bandTd = document.createElement('td');
+//       bandTd.textContent = data.text;
+//       row.appendChild(bandTd);
+
+//       const scoreTd = document.createElement('td');
+//       scoreTd.classList.add('score-column');
+//       createScoreInput(data.bandId, scoreTd);
+//       row.appendChild(scoreTd);
+
+//       const imageTd = document.createElement('td');
+//       imageTd.classList.add('image-column');
+//       createImageUploaders(data.bandId, imageTd);
+//       row.appendChild(imageTd);
+//     }
+
+//     tbody.appendChild(row);
+//   });
+
+//   updatePercentage();
+// }
+
 function populateTable() {
   const tbody = document.getElementById('audit-body');
   tbody.innerHTML = '';
 
-  AUDIT_DATA.forEach(data => {
+  // Dictionary ichida aylanib chiqamiz
+  Object.keys(AUDIT_DATA).forEach(bandId => {
+    const data = AUDIT_DATA[bandId];
     const row = document.createElement('tr');
 
     if (data.subheader) {
       row.classList.add('subheader-row');
       row.innerHTML = `<th colspan="3">${data.text}</th>`;
     } else {
-      row.setAttribute('data-band-id', data.bandId);
+      row.setAttribute('data-band-id', bandId);
 
       const bandTd = document.createElement('td');
       bandTd.textContent = data.text;
@@ -660,18 +758,16 @@ function populateTable() {
 
       const scoreTd = document.createElement('td');
       scoreTd.classList.add('score-column');
-      createScoreInput(data.bandId, scoreTd);
+      createScoreInput(bandId, scoreTd, data.text); // data.text yuborilyapti
       row.appendChild(scoreTd);
 
       const imageTd = document.createElement('td');
       imageTd.classList.add('image-column');
-      createImageUploaders(data.bandId, imageTd);
+      createImageUploaders(bandId, imageTd);
       row.appendChild(imageTd);
     }
-
     tbody.appendChild(row);
   });
-
   updatePercentage();
 }
 
@@ -718,13 +814,13 @@ document.getElementById('auditForm').addEventListener('submit', function(e) {
   const scoreInputs = Array.from(document.querySelectorAll('.score-input'));
   scoreInputs.forEach(inp => setInvalidState(inp, false));
 
-  const firstEmpty = scoreInputs.find(inp => inp.value.trim() === '');
-  if (firstEmpty) {
-  setInvalidState(firstEmpty, true);
-  firstEmpty.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  setTimeout(() => firstEmpty.focus(), 250);
-  return;
-  }
+  // const firstEmpty = scoreInputs.find(inp => inp.value.trim() === '');
+  // if (firstEmpty) {
+  // setInvalidState(firstEmpty, true);
+  // firstEmpty.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  // setTimeout(() => firstEmpty.focus(), 250);
+  // return;
+  // }
 
   const formData = new FormData(this);
   const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;

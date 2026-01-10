@@ -122,26 +122,43 @@ def audit_form_view(request):
                     auditor=auditor
                 )
 
+                # for key in request.POST:
+                #     if key.startswith('score_'):
+                #         band_id = key.replace('score_', '')
+                #         score_str = request.POST.get(key)
+
+                #         try:
+                #             score = int(score_str)
+                #         except ValueError:
+                #             continue
+
+                #         image_key = f'image_{band_id}_1'
+                #         image_file = request.FILES.get(image_key)
+
+                #         AuditDetail.objects.create(
+                #             audit=new_audit,
+                #             band_id=band_id,
+                #             score=score,
+                #             image=image_file
+                #         )
+                # views.py ichida
                 for key in request.POST:
                     if key.startswith('score_'):
                         band_id = key.replace('score_', '')
-                        score_str = request.POST.get(key)
-
-                        try:
-                            score = int(score_str)
-                        except ValueError:
-                            continue
-
+                        score_val = request.POST.get(key)
+                        
+                        # 🆕 Yashirin inputdan to'liq matnni olamiz
+                        full_text = request.POST.get(f'text_{band_id}') 
+                        
                         image_key = f'image_{band_id}_1'
                         image_file = request.FILES.get(image_key)
 
                         AuditDetail.objects.create(
                             audit=new_audit,
-                            band_id=band_id,
-                            score=score,
+                            band_id=full_text if full_text else band_id, # Bazaga to'liq matn tushadi
+                            score=int(score_val) if score_val else 0,
                             image=image_file
                         )
-
             
             # Agar hamma narsa muvaffaqiyatli saqlansa
             return redirect('audit_success') # 👈 'audit_success' URL nomini ishlatamiz
