@@ -87,11 +87,17 @@ WSGI_APPLICATION = 'project.wsgi.application'
 #     }
 # }
 
+# DATABASES = {
+#     "default": dj_database_url.config(
+#         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+#         conn_max_age=600,
+#         ssl_require=not DEBUG,
+#     )
+# }
 DATABASES = {
-    "default": dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=600,
-        ssl_require=not DEBUG,
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL'),
+        conn_max_age=600
     )
 }
 
